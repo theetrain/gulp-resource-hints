@@ -1,0 +1,41 @@
+{
+  "name": "gulp-resource-hints",
+  "version": "0.1.0",
+  "description": "Add resource hints to your html files",
+  "main": "lib/index.js",
+  "scripts": {
+    "pretest": "echint && standard",
+    "test": "tap test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/theetrain/gulp-resource-hints.git"
+  },
+  "keywords": [
+    "resource",
+    "hints",
+    "gulp",
+    "prefetch",
+    "preload",
+    "dns-prefetch",
+    "static",
+    "assets"
+  ],
+  "author": "Enrico Sacchetti <enrico@theetrain.ca> (//theetrain.ca)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/theetrain/gulp-resource-hints/issues"
+  },
+  "homepage": "https://github.com/theetrain/gulp-resource-hints#readme",
+  "devDependencies": {
+    "echint": "^4.0.1",
+    "standard": "^9.0.2",
+    "tap": "^10.3.0",
+    "gulp": "^3.9.1"
+  },
+  "dependencies": {
+    "glob": "^7.1.1",
+    "list-assets": "0.0.2",
+    "through2": "^2.0.3"
+  }
+}
