@@ -1,13 +1,13 @@
 'use strict'
 
 var gulp = require('gulp')
-var resourceHints = require('..')
+var resourceHints = require('../lib/')
 var tap = require('tap')
 
-tap.test('Gulping', function (assert) {
+tap.test('Gulping', function (childTest) {
   regularGulp()
     .on('end', () => {
-      tap.pass('this is fine')
+      childTest.end()
     })
 })
 
