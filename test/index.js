@@ -3,6 +3,7 @@
 var gulp = require('gulp')
 var resourceHints = require('../lib/')
 var tap = require('tap')
+var Transform = require('stream').Transform
 
 tap.test('Gulping', function (childTest) {
   regularGulp()
@@ -13,6 +14,11 @@ tap.test('Gulping', function (childTest) {
 
 function regularGulp () {
   return gulp.src('./fixtures/*.html')
+    .pipe(new Transform({
+      transform: function (file, enc, cb) {
+        console.log('stupid test')
+      }
+    }))
     .pipe(resourceHints())
     .pipe(gulp.dest('./results'))
 }
