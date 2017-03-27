@@ -4,9 +4,10 @@ var gulp = require('gulp')
 var resourceHints = require('../lib')
 var sequence = require('run-sequence')
 var tap = require('tap')
+// var fs = require('fs')
 
-gulp.task('regularGulp', function (cb) {
-  return gulp.src('./fixtures/*.html')
+gulp.task('images', function (cb) {
+  return gulp.src('./fixtures/*(.html)!(*-result.html)')
     .pipe(resourceHints())
     .pipe(gulp.dest('./results'))
     .on('end', () => {
@@ -15,5 +16,5 @@ gulp.task('regularGulp', function (cb) {
 })
 
 gulp.task('default', function (cb) {
-  sequence('regularGulp')
+  sequence('images')
 })
