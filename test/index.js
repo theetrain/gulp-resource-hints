@@ -1,24 +1,42 @@
 'use strict'
 
 var gulp = require('gulp')
-var resourceHints = require('../lib/')
+var resourceHints = require('../lib')
+// var Transform = require('stream').Transform
 var tap = require('tap')
-var Transform = require('stream').Transform
+var sequence = require('run-sequence')
+// var assert = require('assert')
+// var es = require('event-stream')
+// var PassThrough = require('stream').PassThrough
 
-tap.test('Gulping', function (childTest) {
-  regularGulp()
+gulp.task('regularGulp', function (cb) {
+  return gulp.src('./fixtures/*.html')
+    .pipe(resourceHints())
+    .pipe(gulp.dest('./results'))
     .on('end', () => {
-      childTest.end()
+      tap.pass('This is fine')
     })
 })
 
-function regularGulp () {
-  return gulp.src('./fixtures/*.html')
-    .pipe(new Transform({
-      transform: function (file, enc, cb) {
-        console.log('stupid test')
-      }
-    }))
-    .pipe(resourceHints())
-    .pipe(gulp.dest('./results'))
-}
+gulp.task('default', function (cb) {
+  sequence('regularGulp')
+})
+
+tap.test('Gulping', function (childTest) {
+  var done = function () {
+    console.log('it is over')
+    childTest.end()
+  }
+
+  gulp.start('regularGulp')
+    .on('end', done)
+
+  // sequence('regularGulp', done)
+})
+
+// describe('regular-gulp', function () {
+//   it('should stream normally', function (done) {
+//     var stream = resourceHints()
+
+//   })
+// })
