@@ -1,30 +1,43 @@
 // Simple test
 
-var gulp = require('gulp')
-var gutil = require('gulp-util')
-var resourceHints = require('../lib')
-var sequence = require('run-sequence')
-var tap = require('tap')
-var compare = require('compare-with-file').fileMatches
-var Transform = require('stream').Transform
+const gulp = require('gulp')
+const gutil = require('gulp-util')
+const resourceHints = require('../lib')
+const sequence = require('run-sequence')
+const tap = require('tap')
+const compare = require('compare-with-file').fileMatches
+const clean = require('gulp-clean')
+const fs = require('fs')
+const Transform = require('stream').Transform
+
+function compareFiles (testName) {
+  return new Transform({
+    objectMode: true,
+    transform: function (file, enc, cb) {
+      var resultFile = `./fixtures/${file.relative.replace('.html', '-result.html')}`
+      if (!fs.existsSync(resultFile)) {
+        tap.fail(testName + ': Results file does not exist')
+        cb(null, file)
+        return
+      }
+      if (compare(resultFile, String(file.contents))) {
+        tap.passing()
+      } else {
+        tap.fail(testName + ': File does not match expected result')
+      }
+
+      cb(null, file)
+    }
+  })
+}
 
 gulp.task('defaultTest', function (cb) {
+  const testName = 'Default Test'
+
   return gulp.src('./fixtures/*(.html)!(*-result.html)')
     .pipe(resourceHints())
     .pipe(gulp.dest('./results'))
-    .pipe(new Transform({
-      objectMode: true,
-      transform: function (file, enc, cb) {
-        var resultFile = `./fixtures/${file.relative.replace('.html', '-result.html')}`
-        if (compare(resultFile, String(file.contents))) {
-          tap.passing()
-        } else {
-          tap.fail('Default Test: File does not match expected result')
-        }
-
-        cb(null, file)
-      }
-    }))
+    .pipe(compareFiles(testName))
     .on('end', () => {
       tap.pass('Default Test: Pass')
     })
@@ -34,6 +47,11 @@ gulp.task('defaultTest', function (cb) {
     })
 })
 
+gulp.task('clean', function (cb) {
+  return gulp.src('./results/*.*')
+    .pipe(clean())
+})
+
 gulp.task('default', function (cb) {
-  sequence('defaultTest')
+  sequence('clean', 'defaultTest')
 })
