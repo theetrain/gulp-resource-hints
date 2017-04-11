@@ -43,7 +43,24 @@ gulp.task('defaultTest', function (cb) {
     })
     .on('error', () => {
       gutil.log()
-      tap.fail('Default Test: Error on stream')
+      tap.fail(testName, 'Error on stream')
+    })
+})
+
+gulp.task('userOptionsTest', function (cb) {
+  const testName = 'User Options Test'
+
+  return gulp.src('./fixtures/*(.html)!(*-result.html)')
+    .pipe(resourceHints({
+      pageToken: 'happyTime'
+    }))
+    .pipe(gulp.dest('./results'))
+    .on('end', () => {
+      tap.pass('Default Test: Pass')
+    })
+    .on('error', () => {
+      gutil.log()
+      tap.fail(testName, 'Error on stream')
     })
 })
 
@@ -53,5 +70,5 @@ gulp.task('clean', function (cb) {
 })
 
 gulp.task('default', function (cb) {
-  sequence('clean', 'defaultTest')
+  sequence('clean', 'defaultTest', 'userOptionsTest')
 })

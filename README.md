@@ -1,6 +1,8 @@
 # gulp-resource-hints
 > Add resource hints to your html files
 
+[![Build Status](https://travis-ci.org/theetrain/gulp-resource-hints.svg?branch=master)](https://travis-ci.org/theetrain/gulp-resource-hints)
+
 ## Introduction
 
 [Resource hints](https://www.w3.org/TR/resource-hints/) are a great way to reduce loading times on your progressive website. At the time of this writing, only Chrome has support for the major resource hints, but `prefetch` and `dns-prefetch` have [fairly wide availability](http://caniuse.com/#search=resource%20hints) among browsers. Further reading [here](https://medium.com/@luisvieira_gmr/html5-prefetch-1e54f6dda15d).
