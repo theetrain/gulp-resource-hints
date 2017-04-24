@@ -108,3 +108,9 @@ var options {
 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/core.js' // match
 'https://cdn.jsdelivr.net/jquery/3.2.1/jquery.min.js' // no match
 ```
+
+---
+
+Did my package help you out? Let me know!  
+> Twitter: [@EnricoTrain](https://twitter.com/EnricoTrain) | GitHub: [theetrain](https://github.com/theetrain) | Email: [enrico@theetrain.ca](mailto:enrico@theetrain.ca)  
+> [Report an issue](https://github.com/theetrain/gulp-resource-hints/issues)
