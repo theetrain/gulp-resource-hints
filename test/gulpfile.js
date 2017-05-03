@@ -20,9 +20,7 @@ function compareFiles (testName) {
         cb(null, file)
         return
       }
-      if (compare(resultFile, String(file.contents))) {
-        tap.passing()
-      } else {
+      if (!compare(resultFile, String(file.contents))) {
         tap.fail(testName + ': File does not match expected result')
       }
 
@@ -39,7 +37,7 @@ gulp.task('defaultTest', function (cb) {
     .pipe(gulp.dest('./results'))
     .pipe(compareFiles(testName))
     .on('end', () => {
-      tap.pass('Default Test: Pass')
+      tap.pass(testName, 'Pass')
     })
     .on('error', () => {
       gutil.log()
@@ -51,12 +49,10 @@ gulp.task('userOptionsTest', function (cb) {
   const testName = 'User Options Test'
 
   return gulp.src('./fixtures/*(.html)!(*-result.html)')
-    .pipe(resourceHints({
-      pageToken: 'happyTime'
-    }))
+    .pipe(resourceHints())
     .pipe(gulp.dest('./results'))
     .on('end', () => {
-      tap.pass('Default Test: Pass')
+      tap.pass(testName, 'Pass')
     })
     .on('error', () => {
       gutil.log()
