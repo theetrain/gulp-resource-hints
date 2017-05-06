@@ -1,4 +1,4 @@
-// Simple test
+'use strict'
 
 const gulp = require('gulp')
 const gutil = require('gulp-util')
@@ -10,18 +10,16 @@ const clean = require('gulp-clean')
 const fs = require('fs')
 const Transform = require('stream').Transform
 
-function compareFiles (testName) {
+function compareFiles () {
   return new Transform({
     objectMode: true,
     transform: function (file, enc, cb) {
       var resultFile = `./fixtures/${file.relative.replace('.html', '-result.html')}`
       if (!fs.existsSync(resultFile)) {
-        tap.fail(testName + ': Results file does not exist')
-        cb(null, file)
-        return
+        cb(new Error('could not read file: ' + resultFile))
       }
       if (!compare(resultFile, String(file.contents))) {
-        tap.fail(testName + ': File does not match expected result')
+        cb(new Error('output does not match fixture: ' + resultFile))
       }
 
       cb(null, file)
@@ -32,12 +30,12 @@ function compareFiles (testName) {
 gulp.task('defaultTest', function (cb) {
   const testName = 'Default Test'
 
-  return gulp.src('./fixtures/*(.html)!(*-result.html)')
+  return gulp.src('./fixtures/test-default*(.html)!(*-result.html)')
     .pipe(resourceHints())
     .pipe(gulp.dest('./results'))
-    .pipe(compareFiles(testName))
+    .pipe(compareFiles())
     .on('end', () => {
-      tap.pass(testName, 'Pass')
+      tap.pass(testName)
     })
     .on('error', () => {
       gutil.log()
@@ -48,15 +46,37 @@ gulp.task('defaultTest', function (cb) {
 gulp.task('userOptionsTest', function (cb) {
   const testName = 'User Options Test'
 
-  return gulp.src('./fixtures/*(.html)!(*-result.html)')
-    .pipe(resourceHints())
+  return gulp.src('./fixtures/test-user*(.html)!(*-result.html)')
+    .pipe(resourceHints({
+      paths: {
+        prefetch: '**/*.jpg'
+      }
+    }))
     .pipe(gulp.dest('./results'))
+    .pipe(compareFiles())
     .on('end', () => {
-      tap.pass(testName, 'Pass')
+      tap.pass(testName)
     })
     .on('error', () => {
       gutil.log()
       tap.fail(testName, 'Error on stream')
+    })
+})
+
+gulp.task('expectedFailures', function (cb) {
+  const testName = 'Expected Failures'
+
+  return gulp.src('./fixtures/test-default-images.html')
+    .pipe(resourceHints({
+      pageToken: 'sup'
+    }))
+    .pipe(gulp.dest('./results'))
+    .pipe(compareFiles())
+    .on('error', (error) => {
+      if (error.message === 'output does not match fixture: ./fixtures/test-default-images-result.html') {
+        tap.pass(testName)
+        process.exit() // dirty hack to prevent run-sequence from yelling about the errors IT catches
+      }
     })
 })
 
@@ -65,6 +85,6 @@ gulp.task('clean', function (cb) {
     .pipe(clean())
 })
 
-gulp.task('default', function (cb) {
-  sequence('clean', 'defaultTest', 'userOptionsTest')
+gulp.task('default', ['clean'], function (cb) {
+  sequence('defaultTest', 'userOptionsTest', 'expectedFailures')
 })
