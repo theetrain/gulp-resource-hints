@@ -72,7 +72,7 @@ gulp.task('resourceHints', function (cb) {
 `options <Object>` - see [default options](./lib/defaults.js)
 
 - `pageToken <String>` : add your own custom string replace token (default is **##gulp-resource-hints##**)
-- `silent <Boolean>` : disable logs and warnings
+- `silent <Boolean>` : disable logs and warnings (default is `false`)
 - `paths <Object>` : custom string patterns for their respective resource hint.
   - `dns-prefetch <String>` : custom [URL pattern](#url-patterns). Default is `//*` (all non-relative URLs)
   - `preconnect <String>` : custom URL pattern.
