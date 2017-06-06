@@ -1,6 +1,6 @@
 {
   "name": "gulp-resource-hints",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Add resource hints to your html files",
   "main": "lib/index.js",
   "files": [
