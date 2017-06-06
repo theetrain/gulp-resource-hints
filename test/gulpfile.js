@@ -63,6 +63,24 @@ gulp.task('userOptionsTest', function (cb) {
     })
 })
 
+gulp.task('customTokenTest', function (cb) {
+  const testName = 'Custom Token Test'
+
+  return gulp.src('./fixtures/test-token*(.html)!(*-result.html)')
+    .pipe(resourceHints({
+      pageToken: '<!--gulp-resource-hints-->'
+    }))
+    .pipe(gulp.dest('./results'))
+    .pipe(compareFiles())
+    .on('end', () => {
+      tap.pass(testName)
+    })
+    .on('error', () => {
+      gutil.log()
+      tap.fail(testName, 'Error on stream')
+    })
+})
+
 gulp.task('expectedFailures', function (cb) {
   const testName = 'Expected Failures'
 
@@ -86,5 +104,5 @@ gulp.task('clean', function (cb) {
 })
 
 gulp.task('default', ['clean'], function (cb) {
-  sequence('defaultTest', 'userOptionsTest', 'expectedFailures')
+  sequence('defaultTest', 'userOptionsTest', 'customTokenTest', 'expectedFailures')
 })
